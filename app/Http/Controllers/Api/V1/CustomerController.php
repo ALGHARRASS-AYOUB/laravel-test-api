@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\V1\CustomerCollection;
 use App\Http\Resources\V1\CustomerResource;
 use App\Models\Customer;
-use Illuminate\http\Request;
+use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
@@ -20,11 +20,27 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
+        return new CustomerCollection(Customer::with('invoices')->limit(10)->get());
         $filter=new CustomerFilter();
         $queryItems=$filter->transform($request);
-        if(count($queryItems)==0)
+
+        $includeInvoices=$request->query('includeInvoices');
+
+        if($includeInvoices || true){
+            $customers=Customer::with('invoices');
+
+            return  new CustomerCollection($customers->paginate());
+
+        }
+
+        if(count($queryItems)==0){
             return new CustomerCollection(Customer::paginate());
-        return  new CustomerCollection(Customer::where($queryItems)->paginate());
+        }
+        else{
+
+            $customers=Customer::where($queryItems)->paginate();
+        return  new CustomerCollection($customers->appends($request->query()));
+        }
     }
 
     /**

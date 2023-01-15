@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->integer('customer_id');
+//            $table->bigInteger('customer_id');
+            $table->foreignIdFor(\App\Models\Customer::class);
             $table->integer('amount');
             $table->string('status');// B Billed or P Paied, or V Void
             $table->dateTime('billed_date');
