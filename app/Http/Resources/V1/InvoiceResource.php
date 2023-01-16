@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1;
 
+use App\Models\Customer;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class InvoiceResource extends JsonResource
@@ -21,6 +22,7 @@ class InvoiceResource extends JsonResource
             'status'=>$this->status,
             'billedDate'=>$this->billed_date,
             'paidDate'=>$this->paid_date,
+            'customer'=>$this->customer,
         ];
     }
 }
